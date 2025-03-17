@@ -1,0 +1,47 @@
+#include<fstream>
+#include<iostream>
+#include <string>
+using namespace std;
+int main(){
+string n1,n2;
+int m1,m2,r1,r2;
+
+cout<<"creation of file "<<endl; 
+
+cout<<"enter students data "<<'\n';
+cout<<"student 1"<<endl;
+cin>>n1>>m1>>r1;
+cout<<"student 2"<<endl;
+cin>>n2>>m2>>r2;
+
+if(r1 != r2){
+ofstream file("example.txt");
+
+// data in the file (in lines )
+
+file<<"student|marks|roll number  "<<'\n';
+file<<n1<<" | "<<m1<<" | "<<r1<<'\n';
+file<<n2<<" | "<<m2<<" | "<<r2;
+
+file.close();
+
+}
+else{
+cout<<"roll number should not be same \n";
+}
+cout<<"output of file \n";
+
+string data;
+
+ifstream in("example.txt");
+//first line 
+getline(in,data);
+cout<<data<<'\n';
+//second line
+getline(in,data);
+cout<<data<<'\n';
+//third line
+getline(in,data);
+cout<<data<<'\n';
+in.close();
+}
