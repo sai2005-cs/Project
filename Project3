@@ -1,0 +1,87 @@
+class Node:
+    """A class representing a key-value pair stored in a linked list node."""
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+        self.next = None
+
+class HashTable:
+    """A class representing the hash table for dictionary (ADT) implementation."""
+    def __init__(self, size=10):
+        self.size = size
+        self.table = [None] * size  # Initialize the table with empty buckets
+
+    def _hash(self, key):
+        """Simple hash function: returns an index based on the key."""
+        return hash(key) % self.size
+
+    def insert(self, key, value, replace=False):
+        """Insert a key-value pair into the hash table."""
+        index = self._hash(key)
+        new_node = Node(key, value)
+        
+        # If the bucket is empty, just insert the node
+        if not self.table[index]:
+            self.table[index] = new_node
+        else:
+            # Handle collision: chaining method (linked list at this bucket)
+            current = self.table[index]
+            while current:
+                # If replace flag is True and key matches, replace the value
+                if current.key == key:
+                    if replace:
+                        current.value = value
+                    return
+                if current.next is None:
+                    break
+                current = current.next
+            # Add the new node at the end of the list (or replace if the key was found)
+            current.next = new_node
+
+    def find(self, key):
+        """Find and return the value associated with the given key."""
+        index = self._hash(key)
+        current = self.table[index]
+        
+        while current:
+            if current.key == key:
+                return current.value  # Return the found value
+            current = current.next
+        return None  # Key not found
+
+    def delete(self, key):
+        """Delete the key-value pair associated with the given key."""
+        index = self._hash(key)
+        current = self.table[index]
+        prev = None
+        
+        while current:
+            if current.key == key:
+                if prev:  # Remove the node from the linked list
+                    prev.next = current.next
+                else:
+                    self.table[index] = current.next  # Update the head of the list
+                return True
+            prev = current
+            current = current.next
+        return False  # Key not found
+
+# Example Usage:
+ht = HashTable()
+
+# Insert values into the hash table
+ht.insert("apple", 10)
+ht.insert("banana", 20)
+ht.insert("grape", 30)
+
+# Find values based on keys
+print(ht.find("apple"))  # Output: 10
+print(ht.find("banana"))  # Output: 20
+
+# Insert a new value or replace an existing one
+ht.insert("apple", 100, replace=True)  # Replaces value of "apple" with 100
+print(ht.find("apple"))  # Output: 100
+
+# Delete a key-value pair
+ht.delete("banana")
+print(ht.find("banana"))  # Output: None
